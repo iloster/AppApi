@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Inspire::class,
+//         Commands\Inspire::class,
+        Commands\NeteaseSpiderCron::class,
     ];
 
     /**
@@ -24,7 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+//         $schedule->command('inspire')
+//                  ->hourly();
+        Log::info("schedule");
+        $schedule->command('NeteaseSpider');
+//            ->hourly();
     }
 }

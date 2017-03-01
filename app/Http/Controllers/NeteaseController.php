@@ -96,8 +96,12 @@ class NeteaseController extends Controller
             $tmp['ptime'] = $arr['ptime'];
             $tmp['posttype'] = $arr['posttype'];
             $tmp['imgextra'] = json_encode($arr['imgextra']);
-            $num = NeteaseModel::where('photoid','=',$tmp['photoid'])->update($tmp);
-            Log:info("update num:".$num);
+            $ret = NeteaseModel::where('postid',$tmp['postid'])->get();
+            Log::info("ret postid:".$tmp['postid']."|size=".count($ret));
+            if(count($ret)==0){
+                NeteaseModel::create($tmp);
+            }
+//
         }
     }
 }
