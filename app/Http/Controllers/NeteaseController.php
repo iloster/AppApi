@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\NeteaseModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -65,6 +66,7 @@ class NeteaseController extends Controller
             }
         }
 //        $this->insertData($res);
+        $this->updateData($res);
         return $res;
     }
 
@@ -74,6 +76,28 @@ class NeteaseController extends Controller
             return self::TYPE_PHOTO;
         }else{
             return self::TYPE_ARTICLE;
+        }
+    }
+
+    /**
+     *
+     * 更新数据库中的数据
+     * @param $res
+     */
+    public function updateData($arrs){
+        foreach ($arrs as $arr) {
+            $tmp = array();
+            $tmp['postid'] = $arr['postid'];
+            $tmp['photoid'] = $arr['photoid'];
+            $tmp['title'] = $arr['title'];
+            $tmp['digest'] = $arr['digest'];
+            $tmp['source'] = $arr['source'];
+            $tmp['imgsrc'] = $arr['imgsrc'];
+            $tmp['ptime'] = $arr['ptime'];
+            $tmp['posttype'] = $arr['posttype'];
+            $tmp['imgextra'] = json_encode($arr['imgextra']);
+            $num = NeteaseModel::where('photoid','=',$tmp['photoid'])->update($tmp);
+            Log:info("update num:".$num);
         }
     }
 }

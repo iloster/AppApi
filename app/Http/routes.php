@@ -14,6 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+//http://localhost/AppApi/public/index.php/netease/type/main/page/0
 Route::get('/netease/type/{type}/page/{page}',"NeteaseController@getNewsByType");
 /*
 |--------------------------------------------------------------------------
