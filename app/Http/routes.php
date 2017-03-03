@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 //http://localhost/AppApi/public/index.php/netease/type/main/page/0
 Route::get('/netease/type/{type}/page/{page}',"NeteaseController@getNewsByType");
+Route::get('/v2ex/node/{node}/page/{page}','V2exController@getNewsByNode');
 /*
 |--------------------------------------------------------------------------
 | Application Routes
