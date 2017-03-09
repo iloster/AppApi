@@ -12,8 +12,8 @@ class V2exController extends Controller
     //
     public function test(){
 //        $this->timeTrans("几秒前1");
-        $pattern = '/\d/';
-        preg_match_all("1分钟前",$pattern,$matchs);
+        $pattern = '/(\d{0,9}天){0,1}.*?(\d{0,9}小时){0,1}.*?(\d{0,9}分){0,1}/';
+        preg_match($pattern,"2天前",$matchs);
         dump($matchs);
         return "sss";
     }
@@ -53,9 +53,10 @@ class V2exController extends Controller
             echo "now";
         }else{
             Log::info("str:".$str);
-            $pattern = '/(\d*?)([^\x00-\xff])(\d*?)([^\x00-\xff])/';
-            preg_match_all($str,$pattern,$matchs);
+            $pattern = '/(\d{0,9}天){0,1}.*?(\d{0,9}小时){0,1}.*?(\d{0,9}分){0,1}/';
+            preg_match($pattern,$str,$matchs);
             dump($matchs);
+
         }
     }
 }
