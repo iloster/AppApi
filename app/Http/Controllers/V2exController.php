@@ -11,6 +11,10 @@ class V2exController extends Controller
 {
     //
     public function test(){
+//        $this->timeTrans("几秒前1");
+        $pattern = '/\d/';
+        preg_match_all("1分钟前",$pattern,$matchs);
+        dump($matchs);
         return "sss";
     }
     public function getNewsByNode($node,$page){
@@ -37,16 +41,21 @@ class V2exController extends Controller
                 }
                 $temp1 = explode("</strong>", $temp[1]);
                 $item['author'] =preg_replace("/<(.*?)>/","",$temp1[0]);
-                $item['public_time'] = str_replace('&nbsp;','',$temp1[1]);
-                dump($item);
+                $item['public_time'] =explode("•",str_replace(" ","",str_replace('&nbsp;','',$temp1[1])))[1];
+//                dump($item);
+                $this->timeTrans($item['public_time']);
             }
         }
-//        for($i=1;$i<count($matches);$i++){
-//            dump($matches[$i]);
-//            for($j = 0;$j<=9;$j++) {
-//                dump(explode("<strong>", $matches[2][$j]));
-//            }
-//        }
+    }
 
+    public function timeTrans($str){
+        if($str === "几秒前"){
+            echo "now";
+        }else{
+            Log::info("str:".$str);
+            $pattern = '/(\d*?)([^\x00-\xff])(\d*?)([^\x00-\xff])/';
+            preg_match_all($str,$pattern,$matchs);
+            dump($matchs);
+        }
     }
 }
