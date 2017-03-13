@@ -18,6 +18,8 @@ class V2exController extends Controller
 //        dump($matchs);
         return time();
     }
+
+
     public function getNewsByNode($node,$page){
 //        https://www.v2ex.com/go/qna?p=2
         $url = sprintf("https://www.v2ex.com/go/%s?p=%d",$node,$page);
@@ -26,18 +28,19 @@ class V2exController extends Controller
         $body = $client->get($url)->getBody();
 
         Log::info($body);
-        $pattern = '/<div class=\"cell from[\s\S]*?<span class=\"item_title\">([\s\S]*?)<\/span>[\s\S]*?<span class=\"small fade\">([\s\S]*?)<\/span>/';
+        $pattern = '/<div class=\"cell from[\s\S]*?<img src=\"(.*?)\"[\s\S]*?<span class=\"item_title\">([\s\S]*?)<\/span>[\s\S]*?<span class=\"small fade\">([\s\S]*?)<\/span>/';
         preg_match_all($pattern,$body,$matches);
 
         $data  = array();
         Log::info("count:".count($matches));
         if(count($matches)>1){
             for($i = 0;$i<count($matches[1]);$i++){
-                preg_match('/\/(\d*?)#/',$matches[1][$i],$temp0);
+               $item['avatar'] = "https:".$matches[1][$i];
+                preg_match('/\/(\d*?)#/',$matches[2][$i],$temp0);
                 $item['vid'] = $temp0[1];
                 $item['node']= $node;
-                $item['title'] = preg_replace("/<(.*?)>/","",$matches[1][$i]);
-                $temp = explode("<strong>", $matches[2][$i]);
+                $item['title'] = preg_replace("/<(.*?)>/","",$matches[2][$i]);
+                $temp = explode("<strong>", $matches[3][$i]);
                 if(count($temp)===3){
                     $item['last_reply'] =preg_replace("/<(.*?)>/","",$temp[2]);
                 }else{
@@ -47,11 +50,12 @@ class V2exController extends Controller
                 $item['author'] =preg_replace("/<(.*?)>/","",$temp1[0]);
                 $public_time = explode("•",str_replace(" ","",str_replace('&nbsp;','',$temp1[1])))[1];
                 $item['public_time'] = $this->timeTrans($public_time);
-                dump($item);
+//                dump($item);
                 $data[] = $item;
             }
         }
         $this->insertDb($data);
+        return $data;
     }
 
     public function insertDb($arrs){
