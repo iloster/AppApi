@@ -28,14 +28,14 @@ class V2exController extends Controller
         $body = $client->get($url)->getBody();
 
         Log::info($body);
-        $pattern = '/<div class=\"cell from[\s\S]*?<img src=\"(.*?)\"[\s\S]*?<span class=\"item_title\">([\s\S]*?)<\/span>[\s\S]*?<span class=\"small fade\">([\s\S]*?)<\/span>/';
+        $pattern = '/<div class=\"cell from[\s\S]*?<img src=\"(.*?)\"[\s\S]*?<span class=\"item_title\">([\s\S]*?)<\/span>[\s\S]*?<span class=\"small fade\">([\s\S]*?)<\/span>[\s\S]*?<td width=[\s\S]*?>([\s\S]*?)<\/td>/';
         preg_match_all($pattern,$body,$matches);
 
         $data  = array();
         Log::info("count:".count($matches));
         if(count($matches)>1){
             for($i = 0;$i<count($matches[1]);$i++){
-               $item['avatar'] = "https:".$matches[1][$i];
+               $item['avatar'] = "http:".$matches[1][$i];
                 preg_match('/\/(\d*?)#/',$matches[2][$i],$temp0);
                 $item['vid'] = $temp0[1];
                 $item['node']= $node;
@@ -51,7 +51,9 @@ class V2exController extends Controller
                 $public_time = explode("•",str_replace(" ","",str_replace('&nbsp;','',$temp1[1])))[1];
                 $item['public_time'] = $this->timeTrans($public_time);
 //                dump($item);
+                $item['replies'] = str_replace(array(" ","　","\n","\r","\t"),array("","","","",""),preg_replace("/<(.*?)>/","",$matches[4][$i]));
                 $data[] = $item;
+//                dump($item);
             }
         }
         $this->insertDb($data);
@@ -105,7 +107,7 @@ class V2exController extends Controller
             }
         }
 //        echo $day.",".$hour.",".$min;
-        $timeStr = '-'.$day." days ".$hour." hours ".$min." minutes";
+        $timeStr = $day*(-1)." days ".$hour*(-1)." hours ".$min*(-1)." minutes";
 //       echo $timeStr."\n";
         return strtotime($timeStr);
     }
