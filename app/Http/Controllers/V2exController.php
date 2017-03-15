@@ -16,6 +16,7 @@ class V2exController extends Controller
 //        $pattern = '/(\d{0,9}天){0,1}.*?(\d{0,9}小时){0,1}.*?(\d{0,9}分){0,1}/';
 //        preg_match($pattern,"2天前",$matchs);
 //        dump($matchs);
+        
         return time();
     }
 
