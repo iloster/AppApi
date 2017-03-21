@@ -20,8 +20,14 @@ class V2exController extends Controller
         return time();
     }
 
-
     public function getNewsByNode($node,$page){
+//        $ret = V2exModel->get($node,$page);
+        $model = new V2exModel();
+        $rets = $model->getListByNode($node,$page);
+        return $rets;
+    }
+
+    public function findNewsByNode($node,$page){
 //        https://www.v2ex.com/go/qna?p=2
         $url = sprintf("https://www.v2ex.com/go/%s?p=%d",$node,$page);
         Log::info("url=".$url);
