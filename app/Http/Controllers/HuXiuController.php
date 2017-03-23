@@ -11,7 +11,7 @@ class HuXiuController extends Controller
 {
     //
     const URL = "http://m.api.huxiu.com/portal/%s/%s";
-
+//    http://m.api.huxiu.com/article/44120
     public function findNewsByPage($catId,$page){
         $url = sprintf(self::URL,$catId,$page);
         Log::info('url:'.$url);
@@ -19,7 +19,7 @@ class HuXiuController extends Controller
         $ret = $client->get($url)->getBody();
         Log::info('ret:'.$ret);
         $retArr = json_decode($ret);
-        
+
         return $ret;
     }
 }
