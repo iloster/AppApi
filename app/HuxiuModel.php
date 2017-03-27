@@ -26,4 +26,8 @@ class HuxiuModel extends Model
             }
         }
     }
+
+    public function getNewsByTime($time){
+        return $this::where('dateline','>',$time)->get();
+    }
 }

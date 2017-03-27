@@ -13,4 +13,8 @@ class NeteaseModel extends Model
 //        return DB::table('netease_news')->get();
         return $this->get();
     }
+
+    public function getNewsByTime($time){
+
+    }
 }
