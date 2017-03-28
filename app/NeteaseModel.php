@@ -15,6 +15,6 @@ class NeteaseModel extends Model
     }
 
     public function getNewsByTime($time){
-
+        return $this::where('createtime','>',$time)->get();
     }
 }
