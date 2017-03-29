@@ -20,9 +20,11 @@ class MainController extends Controller
         $follows = $this->getFollowByUserId($userId);
         $ret = array();
         foreach($follows as $follow){
-            Log::info('followId:'.$follow['followId']);
-            Log::info("time:".$time);
-            $ret[] = $this::getNewsByFollowId($follow['followId'],$time);
+            $followId = $follow['followId'];
+            $items = $this::getNewsByFollowId($follow['followId'],$time);
+            foreach($items as $item){
+                $ret[] = $items;
+            }
         }
         return $ret;
     }
@@ -46,11 +48,33 @@ class MainController extends Controller
         switch($followId){
             case 1:
                 $model = new NeteaseModel();
-                $ret = $model->getNewsByTime($time);
+                $result = $model->getNewsByTime($time);
+                foreach($result as $item) {
+                    $temp = array();
+                    $temp['title'] = $item['title'];
+                    $temp['content'] = $item['digest'];
+                    $temp['time'] = $item['ptime'];
+                    $imgextra = json_decode($item['imgextra'], true);
+                    if (count($imgextra) == 0) {
+                        $temp['imgextra'][] = $item['imgsrc'];
+                    } else {
+                        $temp['imgextra'] = $imgextra;
+                    }
+                    $ret[] = $temp;
+                }
                 break;
             case 2:
                 $model = new HuxiuModel();
-                $ret = $model->getNewsByTime($time);
+                $result = $model->getNewsByTime($time);
+                foreach($result as $item){
+                    $temp = array();
+                    $temp['title'] = $item['title'];
+                    $temp['content'] = $item['summary'];
+                    $temp['time'] = $item['dateline'];
+                    $temp['imgextra'][] = $item['img'];
+                    $ret[] = $temp;
+                }
+
                 break;
         }
         return $ret;
